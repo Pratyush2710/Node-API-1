@@ -4,9 +4,16 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 
 router.get("/", (req, res, next) => {
-  res.status(200);
-  res.write("Handling GET request tp /product");
-  res.end();
+  Product.find()
+    .exec()
+    .then((docs) => {
+      console.log(docs);
+      res.status(200).json(docs);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ err: error });
+    });
 });
 
 router.post("/", (req, res, next) => {
@@ -52,11 +59,34 @@ router.get("/:productId", (req, res, next) => {
 });
 
 router.patch("/:productId", (req, res, next) => {
-  res.status(200).json({ message: "Updated product" });
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  Product.updateOne({ _id: req.params.productId }, { $set: updateOps })
+    .exec()
+    .then((result) => {
+      console.log(result);
+      res.status(200).json(result);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ err: error });
+    });
 });
 
 router.delete("/:productId", (req, res, next) => {
-  res.status(200).json({ message: "Deleted product" });
+  Product.remove({ _id: req.params.productId })
+    .exec()
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        error: error,
+      });
+    });
 });
 
 module.exports = router;
