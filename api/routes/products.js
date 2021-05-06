@@ -9,9 +9,16 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/", (req, res, next) => {
-  res.status(201);
-  res.write("Handling POST request tp /product");
-  res.end();
+  const product = {
+    name: req.body.name,
+    price: req.body.price,
+  };
+  res
+    .status(200)
+    .json({
+      message: "Handling POST call to /products",
+      reatedProduct: product,
+    });
 });
 
 router.get("/:productId", (req, res, next) => {
