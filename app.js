@@ -5,6 +5,10 @@ const morgan = require("morgan");
 const productRoutes = require("./api/routes/products");
 const orderRoutes = require("./api/routes/orders");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.DB_PATH, { useNewUrlParser: true });
+// process.env.DB_PATH
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,6 +26,7 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
     return res.status(200).json({});
   }
+  next();
 });
 
 app.use("/products", productRoutes);
