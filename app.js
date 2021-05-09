@@ -7,7 +7,10 @@ const orderRoutes = require("./api/routes/orders");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.DB_PATH, { useNewUrlParser: true });
+mongoose.connect(process.env.DB_PATH, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 // process.env.DB_PATH
 
 app.use(morgan("dev"));
